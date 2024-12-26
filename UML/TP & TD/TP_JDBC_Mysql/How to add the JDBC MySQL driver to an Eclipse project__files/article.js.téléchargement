@@ -1,0 +1,163 @@
+var qa_baseurl = 'https://www.tutorialspoint.com/articles/';  
+var baseurl = 'https://www.tutorialspoint.com/';  
+var homeurl = 'https://www.tutorialspoint.com';  
+var quid = '';
+var qurl = '';
+
+function errorToaster(errmsg){
+   document.getElementById("error-warning").innerHTML = errmsg;
+   document.getElementById('error-warning').style.display = 'block';
+   document.getElementById('wrap_loader').style.display = 'none';
+   setTimeout(function () {
+      document.getElementById("error-warning").innerHTML = '';
+      document.getElementById('error-warning').style.display = 'none';
+   }, 3000);
+}
+function successToaster(errmsg){
+   document.getElementById("error-success").innerHTML = errmsg;
+   document.getElementById('error-success').style.display = 'block';
+   document.getElementById('wrap_loader').style.display = 'none';
+	   console.log( "Pt2....");
+   setTimeout(function () {
+	   console.log( "Pt1....");
+      document.getElementById("error-success").innerHTML = '';
+      document.getElementById('error-success').style.display = 'none';
+   }, 3000);
+}
+function copyToClipboard() {
+   var dummy = document.createElement('input'),
+   text = window.location.href;
+   document.body.appendChild(dummy);
+   dummy.value = text;
+   dummy.select();
+   document.execCommand('copy');
+   document.body.removeChild(dummy);
+   setTimeout(function () {
+      document.getElementById('error-success').style.display = 'none';
+   }, 3000);
+   document.getElementById("error-success").innerHTML = 'Copied to Clipboard';
+   document.getElementById('error-success').style.display = 'block';
+}
+function callAuthourStats(){   
+   fetch('/articles/ajax/ajaxGetAuthorStats.php')
+     .then(function(response) {
+       return response.json();
+     })
+     .then(function(jsonResponse) {
+         document.getElementById('ulStats').innerHTML = jsonResponse.stats;
+         document.getElementById('divRightFollowers').innerHTML = response.followers_str;
+         document.getElementById('ulArticles').innerHTML  = response.article_str;
+     });  
+}
+function toggleFunction(element){   
+  if (element.style.display === "none") {
+    element.style.display = "block";
+  } else {
+    element.style.display = "none";
+  } 
+}
+
+/* fetch('/articles/ajax/ajaxGetTopMenu.php').then(function(response) {
+      return response.text();
+   }).then(function (html) {
+      document.getElementsByClassName("nav-login")[0].innerHTML = html;
+   }).catch(function (err) {     
+   });  */
+   
+document.addEventListener("click", function(e){
+   var target = e.target.closest(".dropdwn-tog"); // Or any other selector.
+   var ele = document.getElementById("profile-menu");  
+   var flag = 0;
+   if(target){  
+      flag = 1;   
+   } else {
+      flag = 0;
+   }  
+   if(ele){
+      if(flag == 1){   
+         ele.style.display = "block";
+      } else {
+         ele.style.display = "none"; 
+      }
+   }
+   var followtarget = e.target.closest("#ancFollowAuthor"); 
+   if(followtarget){
+      var quid = followtarget.dataset.quid; 
+      
+      let formData = new FormData();
+      formData.append('quid', quid);
+      const options = {
+          method: 'POST',
+          body: formData
+      };
+     fetch('/articles/ajax/ajaxUpdateUserFollower.php', options)
+        .then(function(response) {
+          return response.json();
+        }).then(function(jsonResponse) {
+            if(jsonResponse.flag == 1){
+               document.getElementById('ancFollowAuthor').innerHTML = '<i class="fas fa-user-minus follow-author-active"></i>&nbsp;  Un Follow';
+               document.getElementById('followersCountSpan').innerHTML = jsonResponse.followcount + " Followers";
+               toastr.success('Successfully Following to the Author');
+            }else if(jsonResponse.flag == 2){
+               document.getElementById('ancFollowAuthor').innerHTML = '<i class="fas fa-user-plus"></i>&nbsp; Follow';
+               document.getElementById('followersCountSpan').innerHTML = jsonResponse.followcount + " Followers";  
+               toastr.success('Successfully Unfollowing to the Author');           
+            } else {
+               toastr.error('Please login to follow the Author');
+            }            
+        }); 
+   }
+   var liketarget = e.target.closest("#pLike"); 
+   if(liketarget){
+      var qid = liketarget.dataset.qid; 
+      
+      let formData = new FormData();
+      formData.append('qid', qid);
+      
+      const options = {
+          method: 'POST',
+          body: formData
+      };
+      fetch('/articles/ajax/ajaxUpdateLike.php', options)
+        .then(function(response) {
+          return response.json();
+        }).then(function(jsonResponse) {
+            var ele = document.getElementById("pLikei");
+            if(jsonResponse.flag == 1){       
+               document.getElementById('pLikeSpan').innerHTML  = jsonResponse.likescount;
+               ele.classList.remove("fal");
+               ele.classList.add("fas");
+               ele.classList.add("likeactive");
+               toastr.success('Successfully Like to the Article');
+            }else if(jsonResponse.flag == 2){
+               document.getElementById('pLikeSpan').innerHTML  = jsonResponse.likescount;
+               ele.classList.add("fal");
+               ele.classList.remove("fas");
+               ele.classList.remove("likeactive");
+               toastr.success('Successfully removed like to the Article');       
+            } else {
+               toastr.error('Please login to like Article');
+            }            
+        });  
+   }   
+});
+
+var divStatsExists = document.getElementById("divStats");
+if (divStatsExists) { 
+   var qid = divStatsExists.dataset.qid; 
+   var quid = divStatsExists.dataset.quid; 
+   let formData = new FormData();
+   formData.append('qid', qid);
+   formData.append('quid', quid);
+   const options = {
+       method: 'POST',
+       body: formData
+   };
+   
+   fetch('/articles/ajax/ajaxGetStats.php', options)
+     .then(function(response) {
+       return response.json();
+     }).then(function(jsonResponse) {         
+         document.getElementById('spanViews').innerHTML  = jsonResponse.viewcount+' Views';
+     }); 
+}
