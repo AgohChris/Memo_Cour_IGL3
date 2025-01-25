@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/UML/Projets/Java Uml Project/Java Uml Project.iml" filepath="$PROJECT_DIR$/UML/Projets/Java Uml Project/Java Uml Project.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/Memo_Cour_IGL3.iml" filepath="$PROJECT_DIR$/.idea/Memo_Cour_IGL3.iml" />
+      <module fileurl="file://$PROJECT_DIR$/THEORIE DES LANGAGES/THEORIE DES LANGAGES.iml" filepath="$PROJECT_DIR$/THEORIE DES LANGAGES/THEORIE DES LANGAGES.iml" />
+      <module fileurl="file://$PROJECT_DIR$/UML/Projets/TP_JDBC/TP_JDBC.iml" filepath="$PROJECT_DIR$/UML/Projets/TP_JDBC/TP_JDBC.iml" />
+      <module fileurl="file://$PROJECT_DIR$/UML/Projets/javaMvc/javaMvc.iml" filepath="$PROJECT_DIR$/UML/Projets/javaMvc/javaMvc.iml" />
+    </modules>
+  </component>
+</project>
